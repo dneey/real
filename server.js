@@ -13,11 +13,12 @@ var flash = require('connect-flash');
 
 var configDB = require('./config/database.js');
 
-mongoose.Promise = Promise;
+mongoose.Promise = require('bluebird');
 mongoose.connect(configDB.url, {
     useMongoClient: true,
+    promiseLibrary: require('bluebird'),
 });
-
+require('./config/passport')(passport);
 app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended: true}));
