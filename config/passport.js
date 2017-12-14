@@ -12,7 +12,7 @@ module.exports = function (passport) {
     });
 
     passport.use('local-signup', new LocalStrategy({
-        emailField: 'email',
+        usernameField: 'email',
         passwordField: 'password',
         passReqToCallback: true
     },
@@ -27,10 +27,11 @@ module.exports = function (passport) {
                         console.log('user exists ' + user);
                         return done(null, false, req.flash('signup-message', 'That email has already been taken'));
                     }else{
+                        //create new user
                         var newUser = new User();
-                        newUser.local.username = email;
+                        newUser.local.email = email;
                         newUser.local.password = newUser.generateHash(password);
-                        console.log('New user creating....');
+                        console.log('Creating user....');
                         newUser.save(function(err){
                             if (err)
                                 throw err;
@@ -38,17 +39,15 @@ module.exports = function (passport) {
                             return done(null, newUser, req.flash('signup-message', 'You have been signed up.'));
                         });
                     }
-                });
-                
+                });   
             });
-            
         }
     ));
 
 
 
     passport.use('local-login', new LocalStrategy({
-        emailField: 'email',
+        usernameField: 'email',
         passwordField: 'password',
         passReqToCallback: true
     },
@@ -56,16 +55,20 @@ module.exports = function (passport) {
        process.nextTick(function(){
            User.findOne({'local.email': email}, function(err, user){
                if (err) {
-                   console.log(error);
+                   console.log(err);
                    return done(err);
                }
-               if (user && user.password == password) {
-                   console.log('user found and passwords match!');
-                   return done(null, user, req.flash('login-flash', 'User logged in'));
+               if (!user) {
+                   console.log('User not found');
+                   return done(null, false, req.flash('login-message', 'Oops!! User not found.'));
                }
-               else{
-                   console.log('login failed');
+
+            //    if user is found but invalid password
+               if (!user.validPassword(password)) {
+                   return done(null, false, req.flash('login-message', 'Oops!! Wrong password.'));
                }
+               return done(null, user);
+               
            });
        });
     }

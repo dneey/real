@@ -7,16 +7,16 @@ module.exports = function(app, passport) {
     });
     
     app.get('/login', function(req, res) {
-        res.render('login');
+        res.render('login', {message: req.flash('login-message')});
     });
 
     app.get('/signup', function (req, res) {
         res.render('signup', {message : req.flash('signup-message')});
     });
 
-    app.get('/home', function(req, res) {
-        console.log(req);
-        res.render('home', {message: req.flash('success-message')});
+    app.get('/home', isLoggedIn, function(req, res) {
+        console.log('user' + ' ' +req.user.local.email);
+        res.render('home', {message: req.flash('signup-message'), user: req.user.local});
     });
 
     /**
@@ -25,12 +25,12 @@ module.exports = function(app, passport) {
     
      app.post('/signup', passport.authenticate('local-signup', {
          successRedirect: '/home',
-        //  failureRedirect: '/signup',
+         failureRedirect: '/signup',
          failureFlash: true,
          successFlash: true
      }));
 
-     app.post('/login', isLoggedIn,  passport.authenticate('local-login',{
+     app.post('/login',  passport.authenticate('local-login',{
          successRedirect: '/home',
          failureRedirect: '/login',
          failureFlash: true,
@@ -44,7 +44,7 @@ module.exports = function(app, passport) {
             return next();
 
         // if they aren't redirect them to the home page
-        res.redirect('/');
+        res.redirect('/login');
     }
 
 

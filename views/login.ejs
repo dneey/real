@@ -23,6 +23,11 @@
 
     <div class="container">
         <br><br><br><br><br><br>
+        <%if(message.length > 0) {%>
+            <div class="alert alert-danger">
+                <%= message %>
+            </div>
+        <% }%>
         <form method="post" action="/login" class="form-signin" style=" max-width: 330px; padding: 15px; margin: 0 auto;">
             
             <h2 class="form-signin-heading">Please sign in</h2>
