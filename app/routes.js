@@ -2,8 +2,13 @@ var User = require('./models/user');
 module.exports = function(app, passport) {
 
 
-    app.get('/', function (req, res) {
-        res.render('index');
+    app.get('/', isLoggedOut, function (req, res) {
+        res.render('index', {message: req.flash('logout-message')});
+    });
+
+    app.get('/profile', isLoggedIn, function(req, res){
+        console.log(req.user);
+        res.render('profile', {message: req.flash('signup-message'), user : req.user.local});
     });
     
     app.get('/login', function(req, res) {
@@ -37,6 +42,12 @@ module.exports = function(app, passport) {
          successFlash: true
      }));
 
+     app.get('/logout', function(req, res){
+        req.logout();
+        req.flash('logout-message', 'You have been logged out.');
+        res.redirect('/');
+     });
+
     function isLoggedIn(req, res, next) {
 
         // if user is authenticated in the session, carry on 
@@ -46,6 +57,15 @@ module.exports = function(app, passport) {
         // if they aren't redirect them to the home page
         res.redirect('/login');
     }
+    function isLoggedOut(req, res, next) {
+        if (!req.isAuthenticated()) {
+            return next();
+        }
+        res.redirect('/home');
+        }
+
+
+
 
 
 

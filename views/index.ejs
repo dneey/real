@@ -17,10 +17,14 @@
 
 <body>
     <div class="container">
-
+    <%if (message.length > 0){%>
+        <div class="alert alert-danger">
+            <%= message %>
+        </div>
+    <%}%>
         <div class="jumbotron text-center">
             <h1>
-                <span class="fa fa-lock"></span> Node Authentication</h1>
+                <span class="fa fa-lock"></span> Real </h1>
 
             <p>Login or Register with:</p>
 

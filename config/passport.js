@@ -36,15 +36,13 @@ module.exports = function (passport) {
                             if (err)
                                 throw err;
                             console.log('New user created.');
-                            return done(null, newUser, req.flash('signup-message', 'You have been signed up.'));
+                            return done(null, newUser, req.flash('signup-message', 'You have been signed up.' + 'Welcome '+ newUser.local.email));
                         });
                     }
                 });   
             });
         }
     ));
-
-
 
     passport.use('local-login', new LocalStrategy({
         usernameField: 'email',
