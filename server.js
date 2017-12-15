@@ -1,7 +1,6 @@
 var express = require('express');
 var app = express();
 var port = process.env.Port || 8080;
-
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var morgan = require('morgan');
@@ -10,6 +9,7 @@ var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var passport = require('passport');
 var flash = require('connect-flash');
+var logout = require('express-passport-logout');
 
 var configDB = require('./config/database.js');
 
@@ -33,7 +33,7 @@ app.use(flash());
 
 app.set('view engine', 'ejs');
 
-require('./app/routes.js')(app, passport);
+require('./app/routes.js')(app, passport, logout);
 
 app.listen(port);
 console.log('App is running on port '+ port);
