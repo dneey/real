@@ -28,25 +28,34 @@ module.exports = function(app, passport) {
      * Passport js implementations
      */
     
-     app.post('/signup', passport.authenticate('local-signup', {
+    app.post('/signup', passport.authenticate('local-signup', {
          successRedirect: '/home',
          failureRedirect: '/signup',
          failureFlash: true,
          successFlash: true
-     }));
+    }));
 
-     app.post('/login',  passport.authenticate('local-login',{
+    app.post('/login',  passport.authenticate('local-login',{
          successRedirect: '/home',
          failureRedirect: '/login',
          failureFlash: true,
          successFlash: true
-     }));
+    }));
 
-     app.get('/logout', function(req, res){
+    app.get('/logout', function(req, res){
         req.logout();
         req.flash('logout-message', 'You have been logged out.');
         res.redirect('/');
-     });
+    });
+
+    app.get('/auth/facebook', passport.authenticate('facebook'));
+    app.get('/auth/facebook/callback',
+        passport.authenticate('facebook', {
+            successRedirect: '/home',
+            failureRedirect: '/',
+            failureFlash: true,
+            successFlash: true
+        }));
 
     function isLoggedIn(req, res, next) {
 
