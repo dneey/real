@@ -48,13 +48,13 @@ module.exports = function(app, passport) {
         res.redirect('/');
     });
 
-    app.get('/auth/facebook', passport.authenticate('facebook'));
+    app.get('/auth/facebook', passport.authenticate('facebook', {scope :['*']}));
     app.get('/auth/facebook/callback',
         passport.authenticate('facebook', {
             successRedirect: '/home',
             failureRedirect: '/',
-            failureFlash: true,
-            successFlash: true
+            // failureFlash: true,
+            // successFlash: true
         }));
 
     function isLoggedIn(req, res, next) {
